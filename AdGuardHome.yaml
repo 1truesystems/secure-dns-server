@@ -25,6 +25,7 @@ dns:
   upstream_dns:
     - https://dns10.quad9.net/dns-query
     - https://security.cloudflare-dns.com/dns-query
+    - https://dns.adguard.com
     - https://1.1.1.2/dns-query
     - https://8.8.8.8/dns-query
   upstream_dns_file: ""
@@ -96,14 +97,14 @@ tls:
 querylog:
   dir_path: ""
   ignored: []
-  interval: 24h
+  interval: 168h
   size_memory: 1000
   enabled: true
   file_enabled: true
 statistics:
   dir_path: ""
   ignored: []
-  interval: 24h
+  interval: 168h
   enabled: true
 filters:
   - enabled: true
@@ -162,8 +163,79 @@ filters:
     url: https://malware-filter.gitlab.io/malware-filter/phishing-filter-hosts.txt
     name: Phishing URL Blocklist (PhishTank)
     id: 1771254615
+  - enabled: true
+    url: https://cdn.jsdelivr.net/gh/hagezi/dns-blocklists@latest/adblock/hoster.txt
+    name: Hagezi Badware Hoster
+    id: 1771280962
+  - enabled: true
+    url: https://cdn.jsdelivr.net/gh/hagezi/dns-blocklists@latest/adblock/dyndns.txt
+    name: Hagezi Dynamic DNS Blocking
+    id: 1771280963
+  - enabled: true
+    url: https://cdn.jsdelivr.net/gh/hagezi/dns-blocklists@latest/adblock/doh-vpn-proxy-bypass.txt
+    name: Hagezi Encrypted DNS Servers
+    id: 1771280964
+  - enabled: true
+    url: https://raw.githubusercontent.com/RPiList/specials/master/Blocklisten/malware
+    name: RPiList Malware
+    id: 1771280966
 whitelist_filters: []
-user_rules: []
+user_rules:
+  - '# === TELEMETRY BLOCKING ==='
+  - '||telemetry.*^'
+  - '||metrics.*^$dnstype=~AAAA'
+  - '||analytics.*^$dnstype=~AAAA'
+  - '||beacons.gcp.gvt2.com^'
+  - '||beacons.gvt2.com^'
+  - '||beacons2.gvt2.com^'
+  - '||beacons3.gvt2.com^'
+  - ""
+  - '# === WINDOWS TELEMETRY ==='
+  - '||vortex.data.microsoft.com^'
+  - '||settings-win.data.microsoft.com^'
+  - '||watson.telemetry.microsoft.com^'
+  - '||telemetry.microsoft.com^'
+  - '||compatexchange.cloudapp.net^'
+  - '||a-0001.a-msedge.net^'
+  - ""
+  - '# === SMART TV TRACKING ==='
+  - '||samsungacr.com^'
+  - '||samsung-dns.com^'
+  - '||lgtvsdp.com^'
+  - '||lgappstv.com^'
+  - '||smartclip.net^'
+  - '||samsungelectronics.com^$dnstype=~A|~AAAA'
+  - ""
+  - '# === IOT DEVICE TRACKING ==='
+  - '||device-metrics-us.amazon.com^'
+  - '||alexa.amazon.com^$dnstype=~A|~AAAA'
+  - '||data.mistat.xiaomi.com^'
+  - '||tracking.miui.com^'
+  - '||connect.rom.miui.com^'
+  - ""
+  - '# === DANGEROUS TLDs ==='
+  - '||*.tk^'
+  - '||*.ml^'
+  - '||*.ga^'
+  - '||*.cf^'
+  - '||*.gq^'
+  - '||*.top^$dnstype=~A|~AAAA'
+  - '||*.xyz^$dnstype=~A|~AAAA'
+  - '||*.buzz^'
+  - '||*.surf^'
+  - '||*.rest^'
+  - '||*.quest^'
+  - ""
+  - '# === DNS REBINDING PROTECTION ==='
+  - '||0.0.0.0^'
+  - '||127.0.0.1^'
+  - ""
+  - '# === CRYPTOCURRENCY SCAM DOMAINS ==='
+  - '||*crypto-airdrop*^'
+  - '||*free-bitcoin*^'
+  - '||*claim-token*^'
+  - '||*wallet-connect-app*^'
+  - '||*metamask-update*^'
 dhcp:
   enabled: false
   interface_name: ""
@@ -190,7 +262,7 @@ filtering:
     ids: []
   protection_disabled_until: null
   safe_search:
-    enabled: false
+    enabled: true
     bing: true
     duckduckgo: true
     ecosia: true
@@ -207,7 +279,7 @@ filtering:
   safesearch_cache_size: 1048576
   parental_cache_size: 1048576
   cache_time: 30
-  filters_update_interval: 24
+  filters_update_interval: 12
   blocked_response_ttl: 10
   filtering_enabled: true
   rewrites_enabled: true
